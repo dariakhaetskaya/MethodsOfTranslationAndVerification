@@ -1,0 +1,36 @@
+// Дан массив целых чисел [n_1,...,n_k] и число m. 
+// Найти все пары индексов (i, j) такие, что n_i + n_j == m. 
+// Сигнатура функции: inds(a : [int], m : int) -> [Pair<int, int>]. 
+// Усложнение: сделать эту функцию сложности O(n log(n)), а не O(n^2). 
+// Использовать функции: foldi, makeTree, setTree, lookupTree.
+
+import runtime;
+import ds/tree;
+import ds/array;
+
+printTree(t : Tree){
+    // depth : int = treeDepth(t);
+    traverseRInOrder(t, \k, v -> {
+       println2(toString(k) + toString(v));
+    //    if (treeDepth(t) < depth) {
+    //        println("");
+    //    }
+    })
+}
+
+findIndexes(array : [int], m : int) -> [Pair<int, int>]{
+    tree : Tree = foldi(array, makeTree(), \i, t, value -> 
+            setTree(t, value, arrayPush(getTreeArrayValue(t,value), i)));
+    foldi(array, [], \i, pairs, a_i ->
+        switch (lookupTree(tree, m - a_i)) {
+            Some(ind): concat(pairs, map(ind, \x -> Pair(x, i)));
+            None(): pairs;
+        });
+}
+
+main(){
+    m : int = 8;
+    array : [int] = [1, 2, 3, 9, 3, 0, 2, 12, 4, 8, 7, 6];
+    // printTree(tree);
+    println(findIndexes(array, m));
+}
