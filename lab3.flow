@@ -1,0 +1,45 @@
+// Написать функцию, fib(n : int) -> [int], 
+// вычисляющую n первых чисел фиббоначчи: 0, 1, 1, 2, 3, 5, ....
+// Сделать ее а) рекурсивной б) с хвостовой рекурсией в) с 
+// использованием ссылок на массив, сложности O( n ). 
+
+import runtime;
+import ds/array;
+import string;
+
+fib(n:int) -> [int] {
+    if (n == 0) {
+        [0];
+    } else if (n == 1) {
+        [0, 1];
+    } else {
+        fibNums : [int] = fib(n-1);
+        arrayPush(fibNums, fibNums[n-1] + fibNums[n-2]);
+    }
+}
+
+fibTailRec(n : int, arr : [int]) -> [int]{
+    if (n == 1){
+        arr;
+    } else {
+        fibTailRec(n-1, arrayPush(arr, arr[length(arr)-1] + arr[length(arr)-2]));
+    }
+}
+
+fibArrRef(n : int) -> [int]{
+    if (n == 0) {
+        [0];
+    } else if (n == 1) {
+        [0, 1];
+    } else {
+        arr : ref [int] = ref fib(n-1);
+        refArrayPush(arr, ^arr[length(^arr)-1] + ^arr[length(^arr)-2]);
+        ^arr;
+    }
+}
+
+main(){
+    println(fib(7));
+    println(fibTailRec(7, [0, 1]));
+    println(fibArrRef(7));
+}
